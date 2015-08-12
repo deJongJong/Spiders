@@ -1,7 +1,7 @@
 from scrapy.spiders import Spider
 from scrapy.selector import Selector
 
-from financialspider.items import Article
+from news.items import Article
 
 class FinancieeldagbladSpider(Spider):
 	name = 'financieeldagblad'
