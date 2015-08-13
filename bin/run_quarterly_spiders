@@ -2,7 +2,7 @@
 
 cd ~/Spiders/
 
-echo $(date +%Y-%m-%d\ %H:%M)" Crawling Financieel Dagblad" >> ~/logs/spiders.log;
+echo $(date +%Y-%m-%d\ %H:%M)" Crawling Financieel Dagblad" >> ~/Spider/logs/spiders.log;
 scrapy crawl financieeldagblad
 
 exit 0
