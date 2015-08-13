@@ -12,9 +12,10 @@ class ArticlePipeline(object):
     try:
       self.conn = psycopg2.connect(
         user='spider', 
-        password='jeej',
-        host='localhost',
-        database='spiderdata',
+        password='nhibTKRcELTg',
+        host='frankfurt-data.cfjkmsuocwwo.eu-central-1.rds.amazonaws.com',
+        database='analysisdata',
+        port='5432'
       )
       self.cursor = self.conn.cursor()
     
