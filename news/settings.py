@@ -4,5 +4,3 @@ DEFAULT_ITEM_CLASS = 'news.items.Article'
 ITEM_PIPELINES = {
 	'news.pipelines.ArticlePipeline': 300,
 }
-FEED_FORMAT = 'csv'
-FEED_URI = 'file:///tmp/export.csv'

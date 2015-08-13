@@ -1,15 +1,53 @@
 import sys
-import MySQLdb
-import hashlib
+import psycopg2
+
+from psycopg2 import DatabaseError
 from scrapy.exceptions import DropItem
-from scrapy.http import Request
 
 class ArticlePipeline(object):
-	
-	def __init__(self):
-		self.conn = MySQLdb.connect('root', '', 'spiderdata', 'localhost', charset="utf8", use_unicode=True)
-		self.cursor = self.conn.cursor()
+  
+  def open_spider(self, spider):
+    connection = None
+    
+    try:
+      self.conn = psycopg2.connect(
+        user='spider', 
+        password='jeej',
+        host='localhost',
+        database='spiderdata',
+      )
+      self.cursor = self.conn.cursor()
+    
+    except DatabaseError, e:
+      print 'Error %s' % e
+      sys.exit(1)
+  
+  def process_item(self, item, spider):
+    
+    # Prepare variables for insertion into sql.
+    date   = item['Date'].strftime('%Y-%m-%d %H:%M:%S')
+    outlet = item['Outlet']
+    title  = item['Title']
+    lead   = item['Lead']
+    
+    # Test for uniqueness.
+    selectSql  = """
+      SELECT count(*)
+      FROM News_Financial
+      WHERE Date = %s
+        AND Outlet = %s
+        AND Title = %s
+        AND Lead = %s;
+    """    
+    self.cursor.execute(selectSql, (date, outlet, title, lead,))
+    
+    if self.cursor.fetchone()[0] > 0:
+      raise DropItem('This article is already stored in the database') 
+    
+    # Insert the new article and commit.
+    insertSql = 'INSERT INTO News_Financial VALUES (%s, %s, %s, %s)'
+    self.cursor.execute(insertSql, (date, outlet, title, lead)) 
+    self.conn.commit()
 
-	def process_item(self, item, spider):
-		print item['title']
-		return item
+  def close_spider(self, spider):
+    self.cursor.close()
