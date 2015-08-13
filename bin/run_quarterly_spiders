@@ -1,0 +1,8 @@
+#!/bin/bash
+
+cd ~/Spiders/
+
+echo $(date +%Y-%m-%d\ %H:%M)" Crawling Financieel Dagblad" >> ~/logs/spiders.log;
+scrapy crawl financieeldagblad
+
+exit 0
